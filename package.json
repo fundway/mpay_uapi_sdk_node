@@ -1,0 +1,50 @@
+{
+  "name": "@mpaycards/uapi-sdk",
+  "version": "1.0.3",
+  "description": "Node.js SDK for the Mpay User API, with automatic HMAC-SHA256 request signing.",
+  "main": "src/index.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "require": "./src/index.js",
+      "import": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "src",
+    "types",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "lint": "node --check src/index.js && node --check src/client.js && node --check src/sign.js && node --check src/errors.js",
+    "example": "node examples/basic-usage.js",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "keywords": [
+    "mpay",
+    "uapi",
+    "sdk"
+  ],
+  "author": "fundway <fundway@outlook.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fundway/mpay_uapi_sdk_node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fundway/mpay_uapi_sdk_node/issues"
+  },
+  "homepage": "https://github.com/fundway/mpay_uapi_sdk_node#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -31,7 +31,7 @@ function createMockServer() {
       const rawBody = Buffer.concat(bodyChunks).toString('utf8');
       const body = rawBody ? JSON.parse(rawBody) : undefined;
 
-      if (path === '/v1/slow') {
+      if (path === '/slow') {
         setTimeout(() => {
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ code: 0, message: '', data: null }));
@@ -39,7 +39,7 @@ function createMockServer() {
         return;
       }
 
-      if (path === '/v1/flaky') {
+      if (path === '/flaky') {
         flakyCount += 1;
         if (flakyCount < 3) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -116,10 +116,10 @@ test('listCards: Returns data when the signature is valid', async () => {
 test('getCardInfo: Returns data for valid cardId, throws MpayUapiError for invalid cardId', async () => {
   await withServer(async (baseUrl) => {
     const client = new MpayUapiClient({ baseUrl, apiKey: API_KEY, apiSecret: API_SECRET });
-    const ok = await client.card.getCardInfo('card_1');
+    const ok = await client.card.getCardInfo({ cardId: 'card_1' });
     assert.equal(ok.data.card_id, 'card_1');
 
-    await assert.rejects(() => client.card.getCardInfo('not_exist'), (err) => {
+    await assert.rejects(() => client.card.getCardInfo({ cardId: 'not_exist' }), (err) => {
       assert.ok(err instanceof MpayUapiError);
       assert.equal(err.httpStatus, 404);
       assert.equal(err.code, 1002);

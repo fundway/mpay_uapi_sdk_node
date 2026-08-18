@@ -70,7 +70,6 @@ const client = new MpayUapiClient({
 | `baseUrl` | `string` | Yes | API base URL, e.g. https://uapi.mpay.cards |
 | `apiKey` | `string` | Yes | API Key |
 | `apiSecret` | `string` | Yes | API Secret, used only for local signature generation and never sent over the network |
-| `apiVersion` | `string` | No | API version. Defaults to `v1` |
 | `timeout` | `number` | No | Timeout for a single request (milliseconds), default: `10000` |
 | `maxRetries` | `number` | No | Maximum number of retries for GET requests on network errors, timeouts, or 5xx responses, default: `0` |
 | `retryDelay` | `number` | No | Base retry delay (milliseconds), using exponential backoff, default: `300` |
@@ -97,10 +96,10 @@ Get the user's wallet balance.
 const res = await client.wallet.getWalletBalance();
 // res: WalletBalance
 ```
-#### `client.wallet.getWalletTransactions(direction, page, limit)`
+#### `client.wallet.getWalletTransactions({ direction, page, limit })`
 Get the user's wallet transaction records.
 ```js
-const res = await client.wallet.getWalletTransactions('in', 1, 20);
+const res = await client.wallet.getWalletTransactions({ direction: 'in', page: 1, limit: 20 });
 // res: WalletTransaction[]
 ```
 #### `client.wallet.getDepositChains()`
@@ -109,22 +108,22 @@ Get the list of supported blockchain networks for deposits.
 const res = await client.wallet.getDepositChains();
 // res: SupportedChain[]
 ```
-#### `client.wallet.getDepositOptions(groupBy)`
+#### `client.wallet.getDepositOptions({ groupBy })`
 Get available deposit options.
 ```js
-const res = await client.wallet.getDepositOptions('network');
+const res = await client.wallet.getDepositOptions({ groupBy: 'network' });
 // res: DepositOption[]
 ```
-#### `client.wallet.getDepositAddress(chainId)`
+#### `client.wallet.getDepositAddress({ chainId })`
 Get the deposit wallet address for the specified blockchain network.
 ```js
-const res = await client.wallet.getDepositAddress(1);
+const res = await client.wallet.getDepositAddress({ chainId: 1 });
 // res: DepositAddress
 ```
-#### `client.wallet.getDepositTransactions(chainId, page, limit)`
+#### `client.wallet.getDepositTransactions({ chainId, page, limit })`
 Get the user's deposit transaction records.
 ```js
-const res = await client.wallet.getDepositTransactions(1, 1, 20);
+const res = await client.wallet.getDepositTransactions({ chainId: 1, page: 1, limit: 20 });
 // res: DepositTransaction[]
 ```
 
@@ -136,10 +135,10 @@ Retrieves cardholder information.
 const res = await client.holder.getHolderInfo();
 // res: HolderInfo
 ```
-#### `client.holder.setHolderInfo(firstName, lastName)`
+#### `client.holder.setHolderInfo({ firstName, lastName })`
 Updates the cardholder information.
 ```js
-const res = await client.holder.setHolderInfo('John', 'Doe');
+const res = await client.holder.setHolderInfo({ firstName: 'John', lastName: 'Doe' });
 // res: HolderInfo
 ```
 
@@ -163,46 +162,46 @@ Retrieves the list of cards.
 const res = await client.card.getCards();
 // res: CardInfo[]
 ```
-#### `client.card.getCardInfo(cardId)`
+#### `client.card.getCardInfo({ cardId })`
 Retrieves information about a card.
 ```js
-const res = await client.card.getCardInfo('2078022262790127618');
+const res = await client.card.getCardInfo({ cardId: '2078022262790127618' });
 // res: CardInfo
 ```
-#### `client.card.getCardSensitive(cardId)`
+#### `client.card.getCardSensitive({ cardId })`
 Retrieves sensitive information for a card.
 ```js
-const res = await client.card.getCardSensitive('2078022262790127618');
+const res = await client.card.getCardSensitive({ cardId: '2078022262790127618' });
 // res: CardSensitiveInfo
 ```
-#### `client.card.getCardTransactions(cardId, page, limit)`
+#### `client.card.getCardTransactions({ cardId, page, limit })`
 Retrieves the transactions for a card.
 ```js
-const res = await client.card.getCardTransactions('2078022262790127618', 1, 20);
+const res = await client.card.getCardTransactions({ cardId: '2078022262790127618', page: 1, limit: 20 });
 // res: CardTransaction[]
 ```
-#### `client.card.remarkCard(cardId, remark)`
+#### `client.card.remarkCard({ cardId, remark })`
 Adds or updates a remark for a card.
 ```js
-const res = await client.card.remarkCard('2078022262790127618', 'main card');
+const res = await client.card.remarkCard({ cardId: '2078022262790127618', remark: 'Main card' });
 // res: CardInfo
 ```
-#### `client.card.createCard(productId)`
+#### `client.card.createCard({ productId })`
 Creates a new card (asynchronous process; returns a processing status).
 ```js
-const res = await client.card.createCard('1923750198816256003');
+const res = await client.card.createCard({ productId: '1923750198816256003' });
 // res: { operation_id, operation_type, status, message }
 ```
-#### `client.card.rechargeCard(cardId, amount)`
+#### `client.card.rechargeCard({ cardId, amount })`
 Recharges a card (asynchronous process; returns a processing status).
 ```js
-const res = await client.card.rechargeCard('2078022262790127618', 25.0);
+const res = await client.card.rechargeCard({ cardId: '2078022262790127618', amount: 25.0 });
 // res: { operation_id, operation_type, status, message }
 ```
-#### `client.card.getCardOperationStatus(operationId)`
+#### `client.card.getCardOperationStatus({ operationId })`
 Retrieves the status of a card operation (e.g. create or recharge).
 ```js
-const res = await client.card.getCardOperationStatus('operation_id');
+const res = await client.card.getCardOperationStatus({ operationId: 'operation_id' });
 // res: { operation_id, operation_type, status, message, card: { ... } }
 ```
 
@@ -214,7 +213,7 @@ All failed requests throw a `MpayUapiError`:
 const { MpayUapiClient, MpayUapiError } = require('mpay-uapi-sdk');
 
 try {
-  await client.card.getCardInfo('not-exist');
+  await client.card.getCardInfo({ cardId: 'not-exist' });
 } catch (err) {
   if (err instanceof MpayUapiError) {
     console.error(err.message);     // Error message

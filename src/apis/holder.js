@@ -1,13 +1,15 @@
 'use strict';
 
-class HolderApi {
+const BaseApi = require('./base.js');
+
+class HolderApi extends BaseApi {
   /**
    * Create a Wallet API client.
    *
    * @param {MpayUapiClient} client - The main SDK client used to send API requests.
    */
   constructor(client) {
-    this.client = client;
+    super(client, 'v1');
   }
 
   /**
@@ -37,7 +39,7 @@ class HolderApi {
    * }
    */
   async getHolderInfo() {
-    return this.client.request('GET', '/holder/info');
+    return this.client.request('GET', this.resolveUri('/holder/info'));
   }
 
   /**
@@ -69,13 +71,17 @@ class HolderApi {
    *   "proof_file": null
    * }
    */
-  async setHolderInfo(firstName, lastName) {
-    return this.client.request('POST', '/holder/set', {
-      body: {
-        first_name: firstName,
-        last_name: lastName,
+  async setHolderInfo({ firstName, lastName } = {}) {
+    return this.client.request(
+      'POST',
+      this.resolveUri('/holder/set'),
+      {
+        body: {
+          first_name: firstName,
+          last_name: lastName,
+        }
       }
-    });
+    );
   }
 }
 

@@ -40,7 +40,7 @@ async function getDepositChains() {
 async function getDepositOptions() {
   try {
     const groupBy =  'network'; // 'network' | 'asset'
-    const options = await client.wallet.getDepositOptions(groupBy);
+    const options = await client.wallet.getDepositOptions({ groupBy });
     console.log('>>>>> Deposit options:\n', options);
     return options;
   } catch (err) {
@@ -55,7 +55,7 @@ async function getDepositOptions() {
 // Get the deposit wallet address for the specified blockchain network.
 async function getDepositAddress(chainId) {
   try {
-    const address = await client.wallet.getDepositAddress(chainId);
+    const address = await client.wallet.getDepositAddress({ chainId });
     console.log(`>>>>> Deposit address (chainId=${chainId}):\n`, address);
     return address;
   } catch (err) {
@@ -72,7 +72,7 @@ async function getDepositTransactions(chainId) {
   try {
     const page = 1;
     const limit = 20;
-    const transactions = await client.wallet.getDepositTransactions(chainId, page, limit);
+    const transactions = await client.wallet.getDepositTransactions({ chainId, page, limit });
     console.log(`>>>>> Deposit transactions:\n`, transactions);
     return transactions;
   } catch (err) {
@@ -105,7 +105,7 @@ async function getWalletTransactions() {
     const direction = null; // null | 'in' | 'out'
     const page = 1;
     const limit = 20;
-    const transactions = await client.wallet.getWalletTransactions(direction, page, limit);
+    const transactions = await client.wallet.getWalletTransactions({ direction, page, limit });
     console.log(`>>>>> Wallet transactions:\n`, transactions);
     return transactions;
   } catch (err) {

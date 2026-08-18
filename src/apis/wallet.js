@@ -1,13 +1,15 @@
 'use strict';
 
-class WalletApi {
+const BaseApi = require('./base.js');
+
+class WalletApi extends BaseApi {
   /**
    * Create a Wallet API client.
    *
    * @param {MpayUapiClient} client - The main SDK client used to send API requests.
    */
   constructor(client) {
-    this.client = client;
+    super(client, 'v1');
   }
 
   /**
@@ -23,7 +25,7 @@ class WalletApi {
    * }
    */
   async getWalletBalance() {
-    return this.client.request('GET', '/wallet/balance');
+    return this.client.request('GET', this.resolveUri('/wallet/balance'));
   }
 
   /**
@@ -66,8 +68,18 @@ class WalletApi {
    *   ]
    * }
    */
-  async getWalletTransactions(direction, page, limit) {
-    return this.client.request('GET', '/wallet/transactions', { query: { direction, page, limit } });
+  async getWalletTransactions({ direction, page, limit } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/wallet/transactions'),
+      {
+        query: {
+          direction,
+          page,
+          limit
+        }
+      }
+    );
   }
 
   /**
@@ -96,7 +108,7 @@ class WalletApi {
    * ]
    */
   async getDepositChains() {
-    return this.client.request('GET', '/deposit/chains');
+    return this.client.request('GET', this.resolveUri('/deposit/chains'));
   }
 
   /**
@@ -192,8 +204,16 @@ class WalletApi {
    *   ]
    * }
    */
-  async getDepositOptions(groupBy='network') {
-    return this.client.request('GET', '/deposit/options', { query: { group_by: groupBy } });
+  async getDepositOptions({ groupBy = 'network' } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/deposit/options'),
+      {
+        query: {
+          group_by: groupBy
+        }
+      }
+    );
   }
 
   /**
@@ -212,8 +232,16 @@ class WalletApi {
    *   "address": "0xf042e44d784f286e686322670B32670BeE807A68"
    * }
    */
-  async getDepositAddress(chainId) {
-    return this.client.request('GET', '/deposit/address', { query: { chain_id: chainId } });
+  async getDepositAddress({ chainId } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/deposit/address'),
+      {
+        query: {
+          chain_id: chainId
+        }
+      }
+    );
   }
 
   /**
@@ -269,8 +297,18 @@ class WalletApi {
    *   ]
    * }
    */
-  async getDepositTransactions(chainId, page, limit) {
-    return this.client.request('GET', '/deposit/transactions', { query: { chain_id: chainId, page, limit } });
+  async getDepositTransactions({ chainId, page, limit } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/deposit/transactions'),
+      {
+        query: {
+          chain_id: chainId,
+          page,
+          limit
+        }
+      }
+    );
   }
 }
 

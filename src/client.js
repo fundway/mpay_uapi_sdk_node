@@ -10,7 +10,6 @@ const CardApi = require('./apis/card');
 
 const SDK_VERSION = require('../package.json').version;
 
-const DEFAULT_API_VERSION = 'v1';
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_MAX_RETRIES = 0;
 const DEFAULT_RETRY_DELAY_MS = 300;
@@ -26,7 +25,6 @@ class MpayUapiClient {
    * @param {string} config.baseUrl              API base URL, e.g. https://uapi.mpay.cards
    * @param {string} config.apiKey               API Key
    * @param {string} config.apiSecret            API Secret, used only for local signature generation and never sent over the network
-   * @param {string} [config.apiVersion='v1']    API version. Defaults to `v1`
    * @param {number} [config.timeout=10000]      Timeout for a single request (milliseconds)
    * @param {number} [config.maxRetries=0]       Maximum number of retries for network errors, timeouts, or 5xx responses (GET requests only)
    * @param {number} [config.retryDelay=300]     Base retry delay (milliseconds), using exponential backoff
@@ -39,7 +37,6 @@ class MpayUapiClient {
     baseUrl,
     apiKey,
     apiSecret,
-    apiVersion = DEFAULT_API_VERSION,
     timeout = DEFAULT_TIMEOUT_MS,
     maxRetries = DEFAULT_MAX_RETRIES,
     retryDelay = DEFAULT_RETRY_DELAY_MS,
@@ -55,7 +52,6 @@ class MpayUapiClient {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
-    this.apiVersion = apiVersion;
     this.timeout = timeout;
     this.maxRetries = maxRetries;
     this.retryDelay = retryDelay;
@@ -142,10 +138,6 @@ class MpayUapiClient {
   }
 
   async _doRequest(method, path, query, body) {
-    if (this.apiVersion) {
-      path = '/' + this.apiVersion + path;
-    }
-
     const headers = this._buildHeaders(method, path, query, body);
 
     let url = this.baseUrl + path;

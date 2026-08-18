@@ -54,7 +54,8 @@ async function getStatuses() {
 // Retrieves the list of cards.
 async function getCards() {
   try {
-    const cards = await client.card.getCards();
+    const status = null;
+    const cards = await client.card.getCards({ status });
     console.log('>>>>> The list of cards:\n', cards);
     return cards;
   } catch (err) {
@@ -70,7 +71,7 @@ async function getCards() {
 async function getCardInfo() {
   try {
     const cardId = "2078022262790127618";
-    const info = await client.card.getCardInfo(cardId);
+    const info = await client.card.getCardInfo({ cardId });
     console.log('>>>>> Card information:\n', info);
     return info;
   } catch (err) {
@@ -86,7 +87,7 @@ async function getCardInfo() {
 async function getCardSensitive() {
   try {
     const cardId = "2078022262790127618";
-    const info = await client.card.getCardSensitive(cardId);
+    const info = await client.card.getCardSensitive({ cardId });
     console.log('>>>>> Card sensitive information:\n', info);
     return info;
   } catch (err) {
@@ -104,7 +105,7 @@ async function getCardTransactions() {
     const cardId = "2078022262790127618";
     const page = 1;
     const limit = 20;
-    const transactions = await client.card.getCardTransactions(cardId, page, limit);
+    const transactions = await client.card.getCardTransactions({ cardId, page, limit });
     console.log('>>>>> Card transactions:\n', transactions);
     return transactions;
   } catch (err) {
@@ -121,7 +122,7 @@ async function remarkCard() {
   try {
     const cardId = "2078022262790127618";
     const remark = "Business card";
-    const result = await client.card.remarkCard(cardId, remark);
+    const result = await client.card.remarkCard({ cardId, remark });
     console.log('>>>>> Remark result:\n', result);
     return result;
   } catch (err) {
@@ -138,7 +139,7 @@ async function getCardOperationStatus() {
   try {
     // const operationId = "a4e1682d-aa75-4aaa-be35-d90543c6da51";
     const operationId = "01ccccb2-63a3-4353-b780-ace9518120d5";
-    const result = await client.card.getCardOperationStatus(operationId);
+    const result = await client.card.getCardOperationStatus({ operationId });
     console.log('>>>>> Operation status query result:\n', result);
     return result;
   } catch (err) {
@@ -157,13 +158,13 @@ async function createCard() {
     // Submit card creation request
     step = 'createCard';
     const productId = "1923750198816256003";
-    const createResult = await client.card.createCard(productId);
+    const createResult = await client.card.createCard({ productId });
     console.log('>>>>> Card creation operation result:\n', createResult);
 
     // Query card creation operation status
     step = 'getCardOperationStatus';
     const operationId = createResult.operation_id;
-    const operationStatus = await client.card.getCardOperationStatus(operationId);
+    const operationStatus = await client.card.getCardOperationStatus({ operationId });
     console.log('>>>>> Card creation operation status:\n', operationStatus);
 
     return operationStatus;
@@ -184,13 +185,13 @@ async function rechargeCard() {
     step = 'rechargeCard';
     const cardId = "2078021127987625985";
     const amount = 25.0;
-    const createResult = await client.card.rechargeCard(cardId, amount);
+    const createResult = await client.card.rechargeCard({ cardId, amount });
     console.log('>>>>> Card recharge operation result:\n', createResult);
 
     // Query card recharge operation status
     step = 'getCardOperationStatus';
     const operationId = createResult.operation_id;
-    const operationStatus = await client.card.getCardOperationStatus(operationId);
+    const operationStatus = await client.card.getCardOperationStatus({ operationId });
     console.log('>>>>> Card recharge operation status:\n', operationStatus);
 
     return operationStatus;

@@ -41,7 +41,7 @@ async function setHolderInfo() {
   try {
     const firstName = 'James';
     const lastName = 'Brown';
-    const info = await client.holder.setHolderInfo(firstName, lastName);
+    const info = await client.holder.setHolderInfo({ firstName, lastName });
     console.log('>>>>> Latest cardholder information:\n', info);
     return info;
   } catch (err) {
@@ -55,7 +55,7 @@ async function setHolderInfo() {
 
 async function main() {
   await getHolderInfo();
-  // await setHolderInfo();
+  await setHolderInfo();
 }
 
 main();

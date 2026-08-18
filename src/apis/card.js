@@ -1,13 +1,15 @@
 'use strict';
 
-class CardApi {
+const BaseApi = require('./base.js');
+
+class CardApi extends BaseApi {
   /**
    * Create a Wallet API client.
    *
    * @param {MpayUapiClient} client - The main SDK client used to send API requests.
    */
   constructor(client) {
-    this.client = client;
+    super(client, 'v1');
   }
 
   /**
@@ -26,7 +28,7 @@ class CardApi {
    * ]
    */
   async getProducts() {
-    return this.client.request('GET', '/card/products');
+    return this.client.request('GET', this.resolveUri('/card/products'));
   }
 
   /**
@@ -44,7 +46,7 @@ class CardApi {
    * ]
    */
   async getStatuses() {
-    return this.client.request('GET', '/card/statuses');
+    return this.client.request('GET', this.resolveUri('/card/statuses'));
   }
 
   /**
@@ -93,8 +95,16 @@ class CardApi {
    *   }
    * ]
    */
-  async getCards() {
-    return this.client.request('GET', '/card/list');
+  async getCards({ status } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/card/list'),
+      {
+        query: {
+          status
+        }
+      }
+    );
   }
 
   /**
@@ -123,8 +133,16 @@ class CardApi {
    *   created_at: "2026-07-08T07:38:01.000Z"
    * }
    */
-  async getCardInfo(cardId) {
-    return this.client.request('GET', '/card/info', { query: { card_id: cardId } });
+  async getCardInfo({ cardId } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/card/info'),
+      {
+        query: {
+          card_id: cardId
+        }
+      }
+    );
   }
 
   /**
@@ -143,8 +161,16 @@ class CardApi {
    *   expire: "07/31"
    * }
    */
-  async getCardSensitive(cardId) {
-    return this.client.request('GET', '/card/sensitive', { query: { card_id: cardId } });
+  async getCardSensitive({ cardId } = {}) {
+    return this.client.request(
+      'GET',
+      this.resolveUri('/card/sensitive'),
+      {
+        query: {
+          card_id: cardId
+        }
+      }
+    );
   }
 
   /**
@@ -185,10 +211,10 @@ class CardApi {
    *   ]
    * }
    */
-  async getCardTransactions(cardId, page, limit) {
+  async getCardTransactions({ cardId, page, limit } = {}) {
     return this.client.request(
       'GET',
-      '/card/transactions',
+      this.resolveUri('/card/transactions'),
       {
         query: {
           card_id: cardId,
@@ -226,10 +252,10 @@ class CardApi {
    *   created_at: "2026-07-08T07:38:01.000Z"
    * }
    */
-  async remarkCard(cardId, remark) {
+  async remarkCard({ cardId, remark } = {}) {
     return this.client.request(
       'POST',
-      '/card/remark',
+      this.resolveUri('/card/remark'),
       {
         body: {
           card_id: cardId,
@@ -276,10 +302,10 @@ class CardApi {
    *   }
    * }
    */
-  async getCardOperationStatus(operationId) {
+  async getCardOperationStatus({ operationId } = {}) {
     return this.client.request(
       'GET',
-      '/card/operation/status',
+      this.resolveUri('/card/operation/status'),
       {
         query: {
           operation_id: operationId
@@ -310,10 +336,10 @@ class CardApi {
    *   message: ""
    * }
    */
-  async createCard(productId) {
+  async createCard({ productId } = {}) {
     return this.client.request(
       'POST',
-      '/card/create',
+      this.resolveUri('/card/create'),
       {
         body: {
           product_id: productId
@@ -346,10 +372,10 @@ class CardApi {
    *   message: ""
    * }
    */
-  async rechargeCard(cardId, amount) {
+  async rechargeCard({ cardId, amount } = {}) {
     return this.client.request(
       'POST',
-      '/card/recharge',
+      this.resolveUri('/card/recharge'),
       {
         body: {
           card_id: cardId,
